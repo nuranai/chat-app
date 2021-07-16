@@ -24,7 +24,7 @@
     position: relative;
 }
 
-.input__wrapper img {
+.input__wrapper .toggle {
     position : absolute;
     width    : 20px;
     top      : 50%;
@@ -97,7 +97,29 @@ input {
 }
 
 .link {
-    display: inline-block;
-    margin: 10px 10px;
+    display        : inline-block;
+    margin         : 10px 10px;
     text-decoration: none;
+}
+
+.input__error {
+    position        : absolute;
+    bottom          : 10%;
+    left            : 50%;
+    transform       : translate(-50%, 0);
+    background-color: red;
+    color           : white;
+    padding         : 10px 20px;
+    border-radius   : 10px;
+    width           : 270px;
+
+    img {
+        position: relative;
+        top: 0.25rem;
+        display: block;
+        height: 12px;
+        width: 12px;
+        cursor: pointer;
+        float : right;
+    }
 }

@@ -1,10 +1,10 @@
-.tooltip {
+@mixin tooltip($back, $cursor) {
     position        : absolute;
     display         : inline-block;
     left            : 94%;
     top             : 50%;
     transform       : translate(0, -50%);
-    background-color: red;
+    background-color: $back;
     border-radius   : 50%;
     width           : 18px;
     height          : 18px;
@@ -12,7 +12,11 @@
     font-weight     : 900;
     text-align      : center;
     color           : white;
-    cursor          : pointer;
+    cursor          : $cursor;
+}
+
+.tooltip {
+    @include tooltip(red, pointer);
 
     .tooltip__text {
         visibility      : hidden;
@@ -35,11 +39,11 @@
         position       : absolute;
         top            : 8px;
         right          : 100%;
-        // margin-top  : -5px;
         border-width   : 5px;
         border-style   : solid;
         border-color   : transparent red transparent transparent;
     }
+
 }
 
 .tooltip:hover .tooltip__text {
@@ -48,13 +52,14 @@
 }
 
 .tooltip__green {
-    background-color: green;
-}
+    @include tooltip(green, unset);
 
-.tooltip i {
-    position : relative;
-    top      : 50%;
-    left     : 0%;
-    transform: translate(0%, -50%);
-    cursor   : unset;
+    img {
+        display : block;
+        position: relative;
+        width   : 14px;
+        top     : 2px;
+        left    : 2px;
+    }
+
 }
