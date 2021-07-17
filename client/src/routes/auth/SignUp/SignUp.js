@@ -1,19 +1,21 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { PasswordTooltip, UserTooltip } from './components/Tooltips'
-import './styles/SignUp.scss'
-import './styles/Tooltip.scss'
-import eyeSvg from './svg/eye.svg'
-import invisibleSvg from './svg/invisible.svg'
-import tick from './svg/check-mark.svg'
-import cancel from './svg/cancel.svg'
+import '../styles/Auth.scss'
+import '../styles/Tooltip.scss'
+import eyeSvg from '../svg/eye.svg'
+import invisibleSvg from '../svg/invisible.svg'
+import tick from '../svg/check-mark.svg'
+import cancel from '../svg/cancel.svg'
 
 export const SignUp = () => {
   const [valueUser, setValueUser] = useState("")
   const [valueEmail, setValueEmail] = useState("")
   const [valuePass, setValuePass] = useState({ value: "", show: false })
   const [isTaken, setIsTaken] = useState({ user: false, email: false })
-  const [inputCheck, setInputCheck] = useState(true)
+  const [showError, setShowError] = useState(false)
+
+  let inputCheck = true;
 
   let history = useHistory()
 
@@ -21,42 +23,55 @@ export const SignUp = () => {
     emailValidation = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
     passwordValidation = /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])[A-Za-z0-9 !"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]{8,}$/
 
+  function CheckSubmit() {
+    inputCheck = (Validate(valueUser, userValidation) && Validate(valueEmail, emailValidation) && Validate(valuePass.value, passwordValidation))
+  }
+
   async function FormSubmit(e) {
 
     e.preventDefault()
 
-    setInputCheck(true)
 
-    setInputCheck(Validate(valueUser, userValidation) && Validate(valueEmail, emailValidation) && Validate(valuePass.value, passwordValidation) && inputCheck)
-    
+    CheckSubmit()
+
+    // setInputCheck(true)
+    // console.log(inputCheck)
+
+    // setInputCheck(Validate(valueUser, userValidation) && Validate(valueEmail, emailValidation) && Validate(valuePass.value, passwordValidation) && inputCheck)
+    // console.log(inputCheck)
     //if every validation is good send data to server
-    
+
     if (inputCheck) {
-      const response = await fetch('http://localhost:5000/sign-up', {
+      const info = {
+        user: valueUser,
+        email: valueEmail,
+        password: valuePass.value
+      }
+      await fetch('http://localhost:5000/sign-up', {
         method: "POST",
         headers: {
-          'Conten-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          useranme: valueUser,
-          email: valueEmail,
-          password: valuePass
-        })
+        body: JSON.stringify(info)
       })
         .then(response => response.json())
-        .catch(err => console.log(err))
-        
-      if (response.status === 200) {
-        //if response is okay redirect user to chat (currently to home page)
-        history.replace("/")
-      }
-      else {
-        // if on server site username or email is taken show error
-        setIsTaken(response.error.taken)
-        //show that something is wrong with inputs
-        setInputCheck(false)
+        .then(response => {
 
-      }
+          if (response.status === 200) {
+            //if response is okay redirect user to chat (currently to home page)
+            history.replace("/")
+          }
+          else {
+            // if on server site username or email is taken show error
+
+            setIsTaken(response.error.taken)
+            //show that something is wrong with inputs
+            setShowError(true)
+
+          }
+        })
+        .catch(err => console.log(err))
+
     }
   }
 
@@ -114,7 +129,7 @@ export const SignUp = () => {
         </form>
         <Link to="/login" className="link">Already have an account?</Link>
       </div>
-      {!inputCheck && <div className="input__error">Error: check input values<img src={cancel} alt="close" onClick={()=>{setInputCheck(true)}}/></div>}
+      {showError && <div className="input__error"  onClick={() =>  setShowError(false) }>Input values are incorrect<img src={cancel} alt="close" /></div>}
     </>
   )
 }

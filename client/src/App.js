@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Route, NavLink, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './routes/Home';
-import { SignUp } from './routes/SignUp/SignUp';
-import { InputMessage } from './components/InputMessage';
-import { MessageList } from './components/MessageList';
-const io = require('socket.io-client')
+import { SignUp } from './routes/auth/SignUp/SignUp';
+// import { InputMessage } from './components/InputMessage';
+// import { MessageList } from './components/MessageList';
+// const io = require('socket.io-client')
 /**
  * TODO: home page
  * TODO: login page

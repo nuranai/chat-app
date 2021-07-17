@@ -1,5 +1,3 @@
-import '../styles/Tooltip.scss'
-
 export function PasswordTooltip() {
   return (
     <div className="tooltip__text">
