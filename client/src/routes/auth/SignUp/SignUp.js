@@ -8,7 +8,7 @@ import invisibleSvg from '../svg/invisible.svg'
 import tick from '../svg/check-mark.svg'
 import cancel from '../svg/cancel.svg'
 
-export const SignUp = () => {
+export const SignUp = ({setAuth}) => {
   const [valueUser, setValueUser] = useState("")
   const [valueEmail, setValueEmail] = useState("")
   const [valuePass, setValuePass] = useState({ value: "", show: false })
@@ -31,23 +31,17 @@ export const SignUp = () => {
 
     e.preventDefault()
 
-
     CheckSubmit()
 
-    // setInputCheck(true)
-    // console.log(inputCheck)
-
-    // setInputCheck(Validate(valueUser, userValidation) && Validate(valueEmail, emailValidation) && Validate(valuePass.value, passwordValidation) && inputCheck)
-    // console.log(inputCheck)
     //if every validation is good send data to server
 
     if (inputCheck) {
       const info = {
-        user: valueUser,
+        username: valueUser,
         email: valueEmail,
         password: valuePass.value
       }
-      await fetch('http://localhost:5000/sign-up', {
+      await fetch('http://localhost:5000/auth/sign-up', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -55,22 +49,16 @@ export const SignUp = () => {
         body: JSON.stringify(info)
       })
         .then(response => response.json())
-        .then(response => {
-
-          if (response.status === 200) {
-            //if response is okay redirect user to chat (currently to home page)
-            history.replace("/")
+        .then(res => {
+          if (res.token) {
+            localStorage.setItem("jwt_token", res.token)
+            setAuth(true)
           }
           else {
-            // if on server site username or email is taken show error
-
-            setIsTaken(response.error.taken)
-            //show that something is wrong with inputs
-            setShowError(true)
-
+            setAuth(false)
           }
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err.message))
 
     }
   }
@@ -129,7 +117,7 @@ export const SignUp = () => {
         </form>
         <Link to="/login" className="link">Already have an account?</Link>
       </div>
-      {showError && <div className="input__error"  onClick={() =>  setShowError(false) }>Input values are incorrect<img src={cancel} alt="close" /></div>}
+      {showError && <div className="input__error" onClick={() => setShowError(false)}>Input values are incorrect<img src={cancel} alt="close" /></div>}
     </>
   )
 }
