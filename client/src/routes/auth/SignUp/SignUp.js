@@ -17,8 +17,6 @@ export const SignUp = ({setAuth}) => {
 
   let inputCheck = true;
 
-  let history = useHistory()
-
   const userValidation = /^[a-zA-z0-9._-]{4,32}$/,
     emailValidation = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
     passwordValidation = /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])[A-Za-z0-9 !"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]{8,}$/
@@ -51,7 +49,7 @@ export const SignUp = ({setAuth}) => {
         .then(response => response.json())
         .then(res => {
           if (res.token) {
-            localStorage.setItem("jwt_token", res.token)
+            localStorage.setItem("token", res.token)
             setAuth(true)
           }
           else {

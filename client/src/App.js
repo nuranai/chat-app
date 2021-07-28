@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
-import Home from './routes/Home';
+import Home from './routes/home/Home';
 import Chat from './routes/chat/Chat';
 import { SignUp } from './routes/auth/SignUp/SignUp';
 import { Login } from './routes/auth/Login/Login';
@@ -8,7 +8,7 @@ import { Login } from './routes/auth/Login/Login';
 // import { MessageList } from './components/MessageList';
 // const io = require('socket.io-client')
 /**
- * TODO: home page
+ * //TODO: home page
  * //TODO: login page
  * //TODO: sign up page
  * TODO: 404 error page
@@ -24,10 +24,10 @@ function App() {
   const checkAuthentication = async () => {
     fetch('http://localhost:5000/auth/verify', {
       method: "POST",
-      headers: { "jwt_token": localStorage.jwt_token }
+      headers: { "token": localStorage.token }
     })
       .then(res => res.json())
-      .then(res => {res === true ? setIsAuthenticated(true) : setIsAuthenticated(false)})
+      .then(res => { res === true ? setIsAuthenticated(true) : setIsAuthenticated(false) })
       .catch(err => console.error(err.message))
   }
 
@@ -42,7 +42,7 @@ function App() {
           <Route
             exact
             path="/"
-            children={<Home />}
+            render={props => !isAuthenticated ? <Home {...props} /> : <Redirect to="/chat" />}
           />
           <Route
             path="/login"

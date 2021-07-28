@@ -27,7 +27,7 @@ export const Login = ({setAuth}) => {
       )
       .then(res => {
         if (res.token) {
-          localStorage.setItem("jwt_token", res.token)
+          localStorage.setItem("token", res.token)
           setAuth(true)
         }
         else {

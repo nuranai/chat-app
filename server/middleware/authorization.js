@@ -4,7 +4,7 @@ require('dotenv').config()
 module.exports = (req, res, next) => {
   try {
 
-    const jwtToken = req.header("jwt_token")
+    const jwtToken = req.header("token")
 
     // console.log(jwt_token)
 
@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
       return res.status(403).json("Not Authorized")
     }
 
-    const payload = jwt.verify(jwtToken, `${process.env.jwtSecret}`)
+    const payload = jwt.verify(jwtToken, `${process.env.jwtSecret}`, {expiresIn:'1h'})
 
     req.user = payload.user
 
