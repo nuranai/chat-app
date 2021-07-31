@@ -21,7 +21,7 @@ router.post('/sign-up', async (req, res) => {
     const validationCheck = Validate(userValidation, username) && Validate(emailValidation, email) && Validate(passwordValidation, password);
 
     if (validationCheck === false) {
-      res.status(401).send("Error: validation error")
+      res.status(401).json({ error: { message: 'validation error', short: "validation" } })
     }
 
     const user = await pool.query("SELECT * FROM users WHERE user_name = $1 OR user_email = $2", [username, email])
@@ -34,6 +34,7 @@ router.post('/sign-up', async (req, res) => {
       res.status(401).json({
         error: {
           message: "username and/or email alerady taken",
+          short: "taken",
           taken: {
             user: userTaken.rows.length > 0 ? true : false,
             email: emailTaken.rows.length > 0 ? true : false
@@ -41,19 +42,20 @@ router.post('/sign-up', async (req, res) => {
         }
       })
     }
+    else {
+      const salt = await bcrypt.genSalt(10)
 
-    const salt = await bcrypt.genSalt(10)
+      const bcryptPassword = await bcrypt.hash(password, salt)
 
-    const bcryptPassword = await bcrypt.hash(password, salt)
+      const newUser = await pool.query(
+        "INSERT INTO users (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *",
+        [username, email, bcryptPassword]
+      )
 
-    const newUser = await pool.query(
-      "INSERT INTO users (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *",
-      [username, email, bcryptPassword]
-    )
+      const token = jwtGenerator(newUser.rows[0].user_id)
 
-    const token = jwtGenerator(newUser.rows[0].user_id)
-
-    res.json({ token })
+      res.json({ token, username })
+    }
 
   } catch (error) {
     console.log(error.message)
@@ -79,7 +81,7 @@ router.post("/login", async (req, res) => {
 
     const token = jwtGenerator(user.rows[0].user_id)
 
-    res.json({ token })
+    res.json({ token, username: user.rows[0].user_name })
 
   } catch (error) {
     console.log(error.message)

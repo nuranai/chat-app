@@ -13,7 +13,7 @@ app.use(exp.json())
 
 
 io.on('connection', (socket) => {
-    console.log(socket.id, "User connected")
+    // console.log(socket.id, "User connected")
     registerMessageHandler(io, socket)
     registerUsersHandlers(io, socket)
 //     socket.on('message', (msg) => {

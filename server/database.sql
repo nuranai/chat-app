@@ -17,7 +17,6 @@ CREATE TABLE conversation_users(
   cu_id SERIAL PRIMARY KEY,
   conversation_id INT,
   user_id uuid,
-  user_name VARCHAR(256) NOT NULL,
   FOREIGN KEY (conversation_id)
     REFERENCES conversations(conversation_id),
   FOREIGN KEY (user_id)
