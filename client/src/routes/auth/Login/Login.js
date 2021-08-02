@@ -1,31 +1,30 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import '../styles/Auth.scss'
 import eyeSvg from '../svg/eye.svg'
 import invisibleSvg from '../svg/invisible.svg'
 import cancel from '../svg/cancel.svg'
 
-export const Login = ({setAuth}) => {
+export const Login = ({ setAuth }) => {
   const [valueEmail, setValueEmail] = useState("")
   const [valuePassword, setValuePassword] = useState("")
   const [togglePassword, setTogglePassword] = useState(false)
   const [showError, setShowError] = useState(false)
-  const history = useHistory()
 
   async function FormSubmit(e) {
-    e.preventDefault()
-    
-    await fetch('http://localhost:5000/auth/login', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email: valueEmail, password: valuePassword })
-    })
-      .then(response => 
-        response.json()
-      )
-      .then(res => {
+    try {
+
+      e.preventDefault()
+
+      const response = await fetch('http://localhost:5000/auth/login', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: valueEmail, password: valuePassword })
+      })
+      if (response.status === 200) {
+        const res = await response.json()
         if (res.token) {
           localStorage.setItem("token", res.token)
           setAuth(true)
@@ -33,8 +32,13 @@ export const Login = ({setAuth}) => {
         else {
           setAuth(false)
         }
-      })
-      .catch(err => console.log(err))
+      }
+      else {
+        setShowError(true)
+      }
+    } catch (error) {
+      alert(error)
+    }
   }
 
 
@@ -49,6 +53,7 @@ export const Login = ({setAuth}) => {
               placeholder="Email"
               value={valueEmail}
               onChange={e => setValueEmail(e.target.value)}
+              className="input_auth"
             />
           </div>
           <div className="input__wrapper">
@@ -57,6 +62,7 @@ export const Login = ({setAuth}) => {
               placeholder="Password"
               value={valuePassword}
               onChange={e => setValuePassword(e.target.value)}
+              className="input_auth"
             />
             <img
               className="toggle"
@@ -69,7 +75,7 @@ export const Login = ({setAuth}) => {
         </form>
         <Link to="/sign-up" className="link">Don't have an account?</Link>
       </div>
-      {showError && <div className="input__error" onClick={() => setShowError(false)}>User or password are incorrect<img src={cancel} alt="close" /></div>}
+      {showError && <div className="input__error" onClick={() => setShowError(false)}>Email or password are incorrect<img src={cancel} alt="close" /></div>}
     </>
   )
 }

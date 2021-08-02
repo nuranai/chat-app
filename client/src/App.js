@@ -4,19 +4,9 @@ import Home from './routes/home/Home';
 import Chat from './routes/chat/Chat';
 import { SignUp } from './routes/auth/SignUp/SignUp';
 import { Login } from './routes/auth/Login/Login';
-// import { InputMessage } from './components/InputMessage';
-// import { MessageList } from './components/MessageList';
-// const io = require('socket.io-client')
-/**
- * //TODO: home page
- * //TODO: login page
- * //TODO: sign up page
- * TODO: 404 error page
- * TODO: chat app
- */
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-
   const setAuth = (b) => {
     setIsAuthenticated(b)
   }

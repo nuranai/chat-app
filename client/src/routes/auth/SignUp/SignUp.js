@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { PasswordTooltip, UserTooltip } from './components/Tooltips'
 import '../styles/Auth.scss'
 import '../styles/Tooltip.scss'
@@ -8,7 +8,7 @@ import invisibleSvg from '../svg/invisible.svg'
 import tick from '../svg/check-mark.svg'
 import cancel from '../svg/cancel.svg'
 
-export const SignUp = ({setAuth}) => {
+export const SignUp = ({ setAuth }) => {
   const [valueUser, setValueUser] = useState("")
   const [valueEmail, setValueEmail] = useState("")
   const [valuePass, setValuePass] = useState({ value: "", show: false })
@@ -29,25 +29,29 @@ export const SignUp = ({setAuth}) => {
 
     e.preventDefault()
 
+    setIsTaken({ user: false, email: false })
+
     CheckSubmit()
 
     //if every validation is good send data to server
 
     if (inputCheck) {
-      const info = {
-        username: valueUser,
-        email: valueEmail,
-        password: valuePass.value
-      }
-      await fetch('http://localhost:5000/auth/sign-up', {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(info)
-      })
-        .then(response => response.json())
-        .then(res => {
+      try {
+
+        const info = {
+          username: valueUser,
+          email: valueEmail,
+          password: valuePass.value
+        }
+        const response = await fetch('http://localhost:5000/auth/sign-up', {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(info)
+        })
+        if (response.status === 200) {
+          const res = await response.json()
           if (res.token) {
             localStorage.setItem("token", res.token)
             setAuth(true)
@@ -55,9 +59,25 @@ export const SignUp = ({setAuth}) => {
           else {
             setAuth(false)
           }
-        })
-        .catch(err => console.error(err.message))
+        }
+        else {
+          const res = await response.json()
+          console.log(res.error.message)
+          if (res.error.short === "taken") {
+            setIsTaken(res.error.taken)
+            setShowError(true)
+          }
+          if (res.error.short === "validation") {
+            setShowError(true)
+          }
+          else {
+            throw res.error;
+          }
+        }
 
+      } catch (error) {
+        alert(error)
+      }
     }
   }
 
@@ -79,6 +99,7 @@ export const SignUp = ({setAuth}) => {
               value={valueUser}
               onChange={e => setValueUser(e.target.value)}
               placeholder="Username"
+              className="input_auth"
             ></input>
             {valueUser.match(userValidation)
               ? <div className="tooltip__green"><img src={tick} alt="check" /></div>
@@ -91,6 +112,7 @@ export const SignUp = ({setAuth}) => {
               value={valueEmail}
               onChange={e => setValueEmail(e.target.value)}
               placeholder="Email"
+              className="input_auth"
             ></input>
           </div>
           {isTaken.email && <span className="taken">Email is already taken</span>}
@@ -100,6 +122,7 @@ export const SignUp = ({setAuth}) => {
               value={valuePass.value}
               onChange={e => setValuePass({ value: e.target.value, show: valuePass.show })}
               placeholder="Password"
+              className="input_auth"
             ></input>
             <img
               className="toggle"

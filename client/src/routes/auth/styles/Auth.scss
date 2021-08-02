@@ -18,6 +18,10 @@
   background-color: #29A0B1;
   text-align      : center;
   border-radius   : 10px;
+  h3 {
+    margin: 15px 0;
+    color: #DDFFE7;
+  }
 }
 
 .input__wrapper {
@@ -76,7 +80,7 @@ span {
   }
 }
 
-input {
+.input_auth {
   @include inputs();
 }
 

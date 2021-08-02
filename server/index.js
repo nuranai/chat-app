@@ -13,15 +13,16 @@ app.use(exp.json())
 
 
 io.on('connection', (socket) => {
-    // console.log(socket.id, "User connected")
-    registerMessageHandler(io, socket)
-    registerUsersHandlers(io, socket)
-//     socket.on('message', (msg) => {
-//         io.emit('message', msg)
-//     })
-//     socket.on("disconnect", () => {
-//         console.log("disconnected")
-//     })
+  // console.log(socket.id, "User connected")
+  registerMessageHandler(io, socket)
+  registerUsersHandlers(io, socket)
+  //     socket.on('message', (msg) => {
+  //         io.emit('message', msg)
+  //     })
+  //     socket.on("disconnect", () => {
+  //         console.log("disconnected")
+  //     })
+
 })
 
 //ROUTES

@@ -1,0 +1,123 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: green;
+  height: 30px;
+}
+
+header button {
+  float: right;
+}
+
+.friends {
+  // background-color: blue;
+  z-index: 1;
+  position: fixed;
+  min-width: 290px;
+  width: 300px;
+  height: 100%;
+  top: 30px;
+  left: 0;
+  border-right: solid;
+  border-color: grey;
+}
+
+.big-list {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.big {
+  background-color: #fff;
+  height: 300%;
+}
+
+.messages {
+  box-sizing: border-box;
+  position: absolute;
+  padding-left: 310px;
+  width: 100%;
+}
+
+.message-block {
+  list-style: none;
+}
+
+.my {
+  float: right;
+}
+
+.modal-background {
+  z-index: 2;
+  position: absolute;
+  background-color: rgba(20,20,20,0.3);
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.modal-content {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  border-radius: 30px;
+  min-height: 150px;
+  width: 20%;
+  height: auto;
+  padding: 20px 30px;
+  background-color: #75E6DA;
+  z-index: 3;
+  input {
+    display: block;
+    height: 31px;
+    width: 80%;
+    border: none;
+    border-radius: 20px;
+    margin: 10px auto;
+    padding: 10px 10px;
+    font-size: 16px;
+  }
+}
+
+.friends_list {
+  position: relative;
+  min-height: 60px;
+  width: 70%;
+  margin: 10px auto;
+  padding: 0px 40px;
+  font-size: 18px;
+}
+
+.friends_item {
+  padding: 5px;
+  list-style: none;
+  border-bottom: solid 2px grey;
+}
+
+.friends_item:hover {
+  background-color: #D4F1F4;
+  cursor: pointer;
+}
+
+.filler {
+  display: inline-block;
+  position: relative;
+  font-size: 16px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+
+.modal-close {
+  top: -20%;
+  right: -10%;
+  position: absolute;
+  height: 20px;
+  cursor: pointer;
+}

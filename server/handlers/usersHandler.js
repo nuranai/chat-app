@@ -11,13 +11,13 @@ module.exports = (io, socket) => {
      */
 
     try {
-      const users = await pool.query(
-        `SELECT user_id FROM conversation_users WHERE user_id != $1 AND conversation_id IN (
+      const usernames = await pool.query(`SELECT user_name FROM users WHERE user_id IN (
+        SELECT user_id FROM conversation_users WHERE user_id != $1 AND conversation_id IN (
           SELECT conversation_id FROM conversation_users WHERE user_id = $1
-        )`, [jwt.decode(data.token).user]
-      )
+        )
+      )`, [jwt.decode(data.token).user])
 
-      socket.emit("users:list", users.rows)
+      socket.emit("users:list", usernames.rows)
     } catch (error) {
       console.log(error)
     }
@@ -75,19 +75,25 @@ module.exports = (io, socket) => {
 
         const receiver = await pool.query('SELECT * FROM users WHERE user_name = $1', [data.to])
 
-        const roomName = sender + "_" + receiver.rows[0].user_id
+        const conversation_check = await pool.query(`SELECT * FROM conversation_users WHERE user_id = $1 AND conversation_id IN (
+          SELECT conversation_id FROM conversation_users WHERE user_id = $2
+        )`, [sender, receiver.rows[0].user_id])
 
-        const conversation = await pool.query("INSERT INTO conversations(conversation_name) values($1) RETURNING conversation_id", [roomName])
+        if (conversation_check.rows.length === 0) {
 
-        await pool.query(
-          "INSERT INTO conversation_users(conversation_id, user_id) VALUES($1, $2), ($1, $3)",
-          [conversation.rows[0].conversation_id, sender, receiver.rows[0].user_id]
-        )
+          const roomName = sender + "_" + receiver.rows[0].user_id
 
-        socket.join(roomName)
+          const conversation = await pool.query("INSERT INTO conversations(conversation_name) values($1) RETURNING conversation_id", [roomName])
 
-        socket.emit("users:update")
+          await pool.query(
+            "INSERT INTO conversation_users(conversation_id, user_id) VALUES($1, $2), ($1, $3)",
+            [conversation.rows[0].conversation_id, sender, receiver.rows[0].user_id]
+          )
 
+          socket.join(roomName)
+
+          socket.emit("users:update")
+        }
       } catch (error) {
         console.log(error)
       }
