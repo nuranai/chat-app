@@ -7,7 +7,7 @@ const path = require('path')
 const io = require('socket.io')(server, { 'cors': { 'origin': "*" } })
 const registerMessageHandler = require('./handlers/messageHandler')
 const registerUsersHandlers = require('./handlers/usersHandler')
-const path = require('path/posix')
+
 const PORT = process.env.PORT || 5000
 
 app.use(cors())
