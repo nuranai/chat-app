@@ -27,7 +27,7 @@ export const FriendsList = () => {
       <Link to={`${url}/search`} className="find_users">Find Users</Link>
       <ul className="users_list">
         {friends.length > 0
-          ? friends.map((val) => <li key={nanoid()} className="user_item"><Link to={url + "/" + val.user_name}>{val.user_name}</Link></li>)
+          ? friends.map((val) => <li key={nanoid()}><Link className="user_item" to={url + "/" + val.user_name}>{val.user_name}</Link></li>)
           : <span className="no_users">No Users</span>}
       </ul>
     </>

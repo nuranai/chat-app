@@ -49,7 +49,7 @@ export const Login = ({ setAuth }) => {
         <form onSubmit={FormSubmit}>
           <div className="input__wrapper">
             <input
-              type="text"
+              type="email"
               placeholder="Email"
               value={valueEmail}
               onChange={e => setValueEmail(e.target.value)}

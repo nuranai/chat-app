@@ -28,6 +28,7 @@ CREATE TABLE messages(
   message_date DATE NOT NULL DEFAULT CURRENT_DATE,
   message_time TIME NOT NULL DEFAULT LOCALTIME(0),
   message_content VARCHAR(512) NOT NULL,
+  sender_name VARCHAR(256) NOT NULL,
   sender_id uuid NOT NULL,
   conversation_id INT NOT NULL,
   FOREIGN KEY (sender_id)

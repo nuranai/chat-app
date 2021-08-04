@@ -11,12 +11,15 @@ module.exports = (req, res, next) => {
     if (!jwtToken) {
       return res.status(403).json("Not Authorized")
     }
+    else {
 
-    const payload = jwt.verify(jwtToken, `${process.env.jwtSecret}`, {expiresIn:'1h'})
+      const payload = jwt.verify(jwtToken, `${process.env.jwtSecret}`, { expiresIn: '1h' })
 
-    req.user = payload.user
+      req.user = payload.user
 
-    next()
+      next()
+    }
+
   } catch (error) {
     console.log(error)
     return res.status(401).json("Token is not valid")

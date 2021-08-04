@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router'
 import { socket } from '../../../service/socket'
 
@@ -9,6 +9,8 @@ export const Messages = () => {
   const [value, setValue] = useState("")
   const [messageList, setMessageList] = useState([])
 
+  const elemToScroll = useRef(null)
+
   const { id } = useParams()
 
   useEffect(() => {
@@ -16,17 +18,28 @@ export const Messages = () => {
 
     socket.on("messages:list", (data) => {
       setMessageList(data)
+      if (elemToScroll.current)
+        elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
     })
 
   }, [token, id])
 
   useEffect(() => {
     socket.on('message:get', (data) => {
-      if (data.from === id || data.socket_id === socket.id)
+      if (data.message.sender_name === id || data.socket_id === socket.id) {
         setMessageList(messageList => [...messageList, data.message])
+        if (elemToScroll.current)
+          elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
+      }
     })
     return () => setMessageList([])
   }, [])
+
+  useEffect(() => { 
+    if (!elemToScroll) {
+      return
+    }
+  }, [elemToScroll])
 
   function SendMessage() {
     if (value !== '')
@@ -36,12 +49,17 @@ export const Messages = () => {
 
   return (
     <div className="messages">
-      <ul>
+      <ul ref={elemToScroll}>
         {messageList.length > 0
-          ? messageList.map((val, index) => <li key={index} className="message-block">{val.message_content}</li>)
-          : <span>No Messages Yet</span>}
+          ? messageList.map((val, index) => <li
+            key={index}
+            className={`message-block ${val.sender_name === id
+              ? null
+              : "my"}`}
+          >{val.message_content}</li>)
+          : <span className="message_filler">No Messages Yet</span>}
       </ul>
-      <div>
+      <div className="send_message">
         <input value={value}
           placeholder="Write Message"
           type="text"

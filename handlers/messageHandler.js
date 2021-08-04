@@ -15,6 +15,8 @@ module.exports = (io, socket) => {
        */
       const senderId = jwt.decode(data.from).user
 
+      const senderName = await pool.query('SELECT user_name FROM users WHERE user_id = $1', [senderId])
+
       const conversation = await pool.query(
         `SELECT * FROM conversation_users WHERE user_id = $1 AND conversation_id IN (
             SELECT conversation_id FROM conversation_users WHERE user_id IN (
@@ -29,15 +31,14 @@ module.exports = (io, socket) => {
       )
 
       const message = await pool.query(
-        "INSERT INTO messages(message_content, sender_id, conversation_id) VALUES ($1,$2,$3) RETURNING message_content",
-        [data.text, senderId, conversation.rows[0].conversation_id]
+        "INSERT INTO messages(message_content, sender_id, sender_name, conversation_id) VALUES ($1,$2,$3,$4) RETURNING message_content, sender_name",
+        [data.text, senderId, senderName.rows[0].user_name, conversation.rows[0].conversation_id]
       )
 
-      const senderName = await pool.query('SELECT user_name FROM users WHERE user_id = $1', [senderId])
 
       io.in(roomName.rows[0].conversation_name).emit('message:get', {
         message: message.rows[0],
-        from: senderName.rows[0].user_name,
+        // from: senderName.rows[0].user_name,
         socket_id: socket.id
       })
 
@@ -64,7 +65,7 @@ module.exports = (io, socket) => {
           [jwt.decode(data.user).user, data.friend])
 
         const messages = await pool.query(
-          "SELECT message_content FROM messages WHERE conversation_id = $1",
+          "SELECT message_content, sender_name FROM messages WHERE conversation_id = $1",
           [conversation.rows[0].conversation_id]
         )
 
