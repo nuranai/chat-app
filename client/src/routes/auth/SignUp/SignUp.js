@@ -43,7 +43,7 @@ export const SignUp = ({ setAuth }) => {
           email: valueEmail,
           password: valuePass.value
         }
-        const response = await fetch('http://localhost:5000/auth/sign-up', {
+        const response = await fetch('/auth/sign-up', {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'

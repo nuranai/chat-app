@@ -12,7 +12,7 @@ function App() {
   }
 
   const checkAuthentication = async () => {
-    fetch('http://localhost:5000/auth/verify', {
+    fetch('/auth/verify', {
       method: "POST",
       headers: { "token": localStorage.token }
     })
