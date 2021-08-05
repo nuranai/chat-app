@@ -67,7 +67,7 @@ export const SignUp = ({ setAuth }) => {
             setIsTaken(res.error.taken)
             setShowError(true)
           }
-          if (res.error.short === "validation") {
+          else if (res.error.short === "validation") {
             setShowError(true)
           }
           else {

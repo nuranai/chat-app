@@ -18,7 +18,7 @@ function App() {
     })
       .then(res => res.json())
       .then(res => { res === true ? setIsAuthenticated(true) : setIsAuthenticated(false) })
-      .catch(err => console.error(err.message))
+      .catch(err => console.error(err))
   }
 
   useEffect(() => {

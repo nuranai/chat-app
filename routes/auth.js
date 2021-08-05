@@ -23,42 +23,45 @@ router.post('/sign-up', async (req, res) => {
     if (validationCheck === false) {
       res.status(401).json({ error: { message: 'validation error', short: "validation" } })
     }
-
-    const user = await pool.query("SELECT * FROM users WHERE user_name = $1 OR user_email = $2", [username, email])
-
-    if (user.rows.length !== 0) {
-
-      const userTaken = await pool.query("SELECT user_name FROM users WHERE user_name = $1", [username])
-      const emailTaken = await pool.query("SELECT user_email FROM users WHERE user_email = $1", [email])
-
-      res.status(401).json({
-        error: {
-          message: "username and/or email alerady taken",
-          short: "taken",
-          taken: {
-            user: userTaken.rows.length > 0 ? true : false,
-            email: emailTaken.rows.length > 0 ? true : false
-          }
-        }
-      })
-    }
     else {
-      const salt = await bcrypt.genSalt(10)
 
-      const bcryptPassword = await bcrypt.hash(password, salt)
+      const user = await pool.query("SELECT * FROM users WHERE user_name = $1 OR user_email = $2", [username, email])
 
-      const newUser = await pool.query(
-        "INSERT INTO users (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *",
-        [username, email, bcryptPassword]
-      )
+      if (user.rows.length !== 0) {
 
-      const token = jwtGenerator(newUser.rows[0].user_id)
+        const userTaken = await pool.query("SELECT user_name FROM users WHERE user_name = $1", [username])
+        const emailTaken = await pool.query("SELECT user_email FROM users WHERE user_email = $1", [email])
 
-      res.json({ token, username })
+        res.status(401).json({
+          error: {
+            message: "username and/or email alerady taken",
+            short: "taken",
+            taken: {
+              user: userTaken.rows.length > 0 ? true : false,
+              email: emailTaken.rows.length > 0 ? true : false
+            }
+          }
+        })
+      }
+      else {
+        const salt = await bcrypt.genSalt(10)
+
+        const bcryptPassword = await bcrypt.hash(password, salt)
+
+        const newUser = await pool.query(
+          "INSERT INTO users (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *",
+          [username, email, bcryptPassword]
+        )
+
+        const token = jwtGenerator(newUser.rows[0].user_id)
+
+        res.json({ token })
+      }
+
     }
 
   } catch (error) {
-    console.log(error.message)
+    console.log(error)
     res.status(500).send("Server Error")
   }
 })
@@ -81,7 +84,7 @@ router.post("/login", async (req, res) => {
 
     const token = jwtGenerator(user.rows[0].user_id)
 
-    res.json({ token, username: user.rows[0].user_name })
+    res.json({ token })
 
   } catch (error) {
     console.log(error.message)
