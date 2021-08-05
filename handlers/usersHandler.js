@@ -51,11 +51,15 @@ module.exports = (io, socket) => {
        * }
        */
       try {
+        const userId = jwt.decode(data.token).user
+
+        await pool.query("UPDATE users SET latest_socket_id = $1 WHERE user_id = $2", [socket.id, userId])
+
         const roomNames = await pool.query(
           `SELECT conversation_name FROM conversations WHERE conversation_id IN (
           SELECT conversation_id FROM conversation_users WHERE user_id = $1
           )`,
-          [jwt.decode(data.token).user])
+          [userId])
         roomNames.rows.map(val => socket.join(val.conversation_name))
       } catch (error) {
         console.log(error)
@@ -75,7 +79,8 @@ module.exports = (io, socket) => {
 
         const receiver = await pool.query('SELECT * FROM users WHERE user_name = $1', [data.to])
 
-        const conversation_check = await pool.query(`SELECT * FROM conversation_users WHERE user_id = $1 AND conversation_id IN (
+        const conversation_check = await pool.query(
+          `SELECT * FROM conversation_users WHERE user_id = $1 AND conversation_id IN (
           SELECT conversation_id FROM conversation_users WHERE user_id = $2
         )`, [sender, receiver.rows[0].user_id])
 
@@ -83,7 +88,10 @@ module.exports = (io, socket) => {
 
           const roomName = sender + "_" + receiver.rows[0].user_id
 
-          const conversation = await pool.query("INSERT INTO conversations(conversation_name) values($1) RETURNING conversation_id", [roomName])
+          const conversation = await pool.query(
+            "INSERT INTO conversations(conversation_name) values($1) RETURNING conversation_id",
+            [roomName]
+          )
 
           await pool.query(
             "INSERT INTO conversation_users(conversation_id, user_id) VALUES($1, $2), ($1, $3)",
@@ -92,6 +100,10 @@ module.exports = (io, socket) => {
 
           socket.join(roomName)
 
+          if (receiver.rows[0].latest_socket_id) {
+            io.to(receiver.rows[0].latest_socket_id).emit('users:update')
+          }
+          
           socket.emit("users:update")
         }
       } catch (error) {

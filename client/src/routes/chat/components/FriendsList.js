@@ -7,18 +7,21 @@ export const FriendsList = () => {
   const [friends, setFriends] = useState([])
   const { url } = useRouteMatch()
 
-  
+
 
   useEffect(() => {
     socket.on('users:update', () => {
       socket.emit('users:list', { token: localStorage.token })
     })
-    socket.on('users:list', (data) => {
-      setFriends(data)
-      socket.emit('users:join-room', { token: localStorage.token })
-    })
+      .on('users:list', (data) => {
+        setFriends(data)
+        socket.emit('users:join-room', { token: localStorage.token })
+      })
+      .on('users:new-join', () => {
+        
+      })
     socket.emit('users:list', { token: localStorage.token })
-    return () => {setFriends([]);}
+    return () => { setFriends([]); }
   }, [])
 
 

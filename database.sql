@@ -5,7 +5,8 @@ CREATE TABLE users(
   uuid_generate_v4(),
   user_name VARCHAR(256) NOT NULL,
   user_email VARCHAR(256) NOT NULL,
-  user_password VARCHAR(256) NOT NULL
+  user_password VARCHAR(256) NOT NULL,
+  latest_socket_id VARCHAR(256)
 );
 
 CREATE TABLE conversations(

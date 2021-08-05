@@ -33,7 +33,6 @@ export default function Chat({ setAuth }) {
     <>
       <header>
         <button onClick={LogOut}>log out</button>
-
       </header>
 
       <nav className="friends">
