@@ -34,7 +34,9 @@ io.on('connection', (socket) => {
 
 app.use('/auth', require('./routes/auth'))
 
-app.use('/chat', require('./routes/chat'))
+// app.use('/chat', require('./routes/chat'))
+
+app.get('*', (req, res)=> res.sendFile(path.resolve(path.join(__dirname, 'client/build'), 'index.html')))
 
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`)
