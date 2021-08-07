@@ -18,15 +18,8 @@ if (process.env.NODE_ENV === "production") {
 }
 
 io.on('connection', (socket) => {
-  // console.log(socket.id, "User connected")
   registerMessageHandler(io, socket)
   registerUsersHandlers(io, socket)
-  //     socket.on('message', (msg) => {
-  //         io.emit('message', msg)
-  //     })
-  //     socket.on("disconnect", () => {
-  //         console.log("disconnected")
-  //     })
 
 })
 

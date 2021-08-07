@@ -27,7 +27,6 @@ export const SearchModal = ({username}) => {
 
   function Click(e) {
     socket.emit('users:add-new', {to: e.target.innerText, sender: localStorage.token})
-    // console.log(e.target.innerText)
     history.goBack()
 
     history.replace(`${history.location.pathname}/${e.target.innerText}`)

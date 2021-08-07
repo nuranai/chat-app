@@ -6,8 +6,6 @@ module.exports = (req, res, next) => {
 
     const jwtToken = req.header("token")
 
-    // console.log(jwt_token)
-
     if (!jwtToken) {
       return res.status(403).json("Not Authorized")
     }
