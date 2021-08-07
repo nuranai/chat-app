@@ -8,12 +8,18 @@ Check it out: [Heroku](https://nuranai-chat-app.herokuapp.com)
 
 -----------------------------------
 
-Watch progress in [trello](https://trello.com/b/lEe7njiY/chat-app)
+Watch progress on [trello](https://trello.com/b/lEe7njiY/chat-app)
 
 -----------------------------------
+
+## Contributing 
+
+Contributions, issues, feature requests are welcome!
+
+Feel free to check [issues page](https://github.com/nuranai/chat-app/issues)
 
 ## Contacts
 
 Email: <bajanga07@gmail.com>
 
-Telegram: [Nuranai](https://t.me/Bajanga)
+Telegram: [Nuranai](https://t.me/nuranai)
