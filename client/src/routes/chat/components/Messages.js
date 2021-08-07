@@ -26,6 +26,7 @@ export const Messages = () => {
 
   useEffect(() => {
     socket.on('message:get', (data) => {
+      console.log(data)
       if (data.message.sender_name === id || data.socket_id === socket.id) {
         setMessageList(messageList => [...messageList, data.message])
         if (elemToScroll.current)

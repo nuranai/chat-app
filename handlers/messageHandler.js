@@ -35,6 +35,8 @@ module.exports = (io, socket) => {
         [data.text, senderId, senderName.rows[0].user_name, conversation.rows[0].conversation_id]
       )
 
+      console.log(data)
+
 
       io.in(roomName.rows[0].conversation_name).emit('message:get', {
         message: message.rows[0],
