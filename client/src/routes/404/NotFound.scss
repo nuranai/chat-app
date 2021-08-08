@@ -1,0 +1,22 @@
+.not_found_container {
+  position : absolute;
+  top      : 50%;
+  left     : 50%;
+  transform: translate(-50%, -50%);
+  background-color: #29A0B1;
+  border-radius: 20px;
+  padding: 20px 30px;
+
+  h1 {
+    margin: 30px 0px;
+  }
+
+  p {
+    margin-bottom: 10px;
+  }
+
+  .not_found_link {
+    display: block;
+
+  }
+}

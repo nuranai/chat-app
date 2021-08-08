@@ -4,6 +4,8 @@ import Home from './routes/home/Home';
 import Chat from './routes/chat/Chat';
 import { SignUp } from './routes/auth/SignUp/SignUp';
 import { Login } from './routes/auth/Login/Login';
+import { NotFound } from './routes/404/NotFound';
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -46,7 +48,10 @@ function App() {
             path="/chat"
             render={props => isAuthenticated ? <Chat {...props} setAuth={setAuth} /> : <Redirect to="/login" />}
           />
-          <Route />
+          <Route 
+            path="*"
+            children={NotFound}
+          />
         </Switch>
       </div>
     </Router>
