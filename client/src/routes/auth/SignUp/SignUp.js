@@ -108,7 +108,7 @@ export const SignUp = ({ setAuth }) => {
           {isTaken.user && <span className="taken">Username is already taken</span>}
           <div className="input__wrapper">
             <input
-              type="text"
+              type="email"
               value={valueEmail}
               onChange={e => setValueEmail(e.target.value)}
               placeholder="Email"
