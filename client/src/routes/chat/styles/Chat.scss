@@ -20,15 +20,15 @@ header {
   height          : 30px;
 
   button {
-    position: relative;
-    border: none;
+    position : relative;
+    border   : none;
     font-size: 14px;
-    padding: 5px;
-    display : block;
-    z-index : 1;
-    float   : right;
+    padding  : 5px;
+    display  : block;
+    z-index  : 1;
+    float    : right;
   }
-  
+
   button:hover {
     background-color: #189AB4;
   }
@@ -41,21 +41,34 @@ header {
 // *Friends list style
 
 .friends {
-  z-index     : 1;
-  position    : fixed;
+  z-index         : 1;
+  position        : fixed;
   // min-width   : 290px;
-  width       : 300px;
-  height      : 100%;
-  top         : 30px;
-  left        : 0;
-  border-right: solid;
-  border-color: grey;
-  overflow-y  : auto;
+  width           : 300px;
+  height          : 100%;
+  top             : 30px;
+  left            : 0;
+  border-right    : solid;
+  border-color    : grey;
+  overflow-y      : auto;
+  background-color: #D4F1F4;
+
   @media screen and (max-width:960px) {
     // min-width: 200px;
     width: 225px;
 
   }
+
+  transition: left 0.3s ease-out;
+}
+
+.hide {
+  left    : -225px;
+  // right: 100%;
+}
+
+.show {
+  left: 0;
 }
 
 .find_users {
@@ -79,15 +92,15 @@ header {
 }
 
 .user_item {
-  display            : block;
-  padding            : 10px 0;
-  width              : 100%;
-  text-align         : center;
-  list-style         : none;
-  text-decoration    : none;
-  color              : #000;
-  border-bottom      : 2px solid #050A30;
-  display            : block;
+  display        : block;
+  padding        : 10px 0;
+  width          : 100%;
+  text-align     : center;
+  list-style     : none;
+  text-decoration: none;
+  color          : #000;
+  border-bottom  : 2px solid #050A30;
+  display        : block;
 }
 
 .user_item:hover {
@@ -95,10 +108,10 @@ header {
 }
 
 .no_users {
-  display: inline-block;
-  position: relative;
+  display  : inline-block;
+  position : relative;
   font-size: 25px;
-  left: 50%;
+  left     : 50%;
   transform: translate(-50%, 0);
 }
 
@@ -116,6 +129,7 @@ header {
   @media screen and (max-width:960px) {
     padding-left: 235px;
   }
+
   @media screen and (max-width: 760px) {
     padding-left: 10px;
   }
@@ -151,14 +165,14 @@ header {
   bottom  : 0;
 
   input {
-    width        : 80%;
+    width        : 85%;
     border       : 2px solid #050A30;
     border-radius: 8px;
     padding      : 5px 3px;
   }
 
   button {
-    width        : 18%;
+    width        : 10%;
     float        : right;
     padding      : 5px 3px;
     border       : 2px solid #050A30;
@@ -168,10 +182,10 @@ header {
 }
 
 .message_filler {
-  display: inline-block;
-  position: relative;
-  top: 50%;
-  left: 50%;
+  display  : inline-block;
+  position : relative;
+  top      : 50%;
+  left     : 50%;
   transform: translate(-50%, -50%);
   font-size: 30px;
 }
@@ -207,7 +221,7 @@ header {
 
   @media screen and (max-width:480px) {
     box-sizing: border-box;
-    width: 90%;
+    width     : 90%;
   }
 
   input {
@@ -257,6 +271,7 @@ header {
   position: absolute;
   height  : 20px;
   cursor  : pointer;
+
   @media screen and (max-width:480px) {
     right: 5%;
   }

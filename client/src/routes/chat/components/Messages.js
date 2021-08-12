@@ -66,7 +66,7 @@ export const Messages = () => {
           onChange={e => setValue(e.target.value)}
           onKeyPress={e => { if (e.key === 'Enter') SendMessage() }}
         />
-        <button onClick={SendMessage}>Send Message</button>
+        <button onClick={SendMessage}>{'=>'}</button>
       </div>
     </div>
   )

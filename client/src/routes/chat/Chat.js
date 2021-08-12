@@ -45,7 +45,7 @@ export default function Chat({ setAuth }) {
       </header>
 
       <nav className={`friends ${width <=760 && (toggle ? "show" : "hide")}`}>
-        <FriendsList />
+        <FriendsList setToggle={setToggle}/>
       </nav>
 
       <Switch>
