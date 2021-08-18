@@ -11,7 +11,7 @@ module.exports = (io, socket) => {
      */
 
     try {
-      const usernames = await pool.query(`SELECT user_name FROM users WHERE user_id IN (
+      const usernames = await pool.query(`SELECT user_name, latest_socket_id as is_online FROM users WHERE user_id IN (
         SELECT user_id FROM conversation_users WHERE user_id != $1 AND conversation_id IN (
           SELECT conversation_id FROM conversation_users WHERE user_id = $1
         )
@@ -103,9 +103,28 @@ module.exports = (io, socket) => {
           if (receiver.rows[0].latest_socket_id) {
             io.to(receiver.rows[0].latest_socket_id).emit('users:update')
           }
-          
+
           socket.emit("users:update")
         }
+      } catch (error) {
+        console.log(error)
+      }
+    })
+    .on('user:online', async (data) => {
+      /**
+       * data stucture 
+       * {
+       *  token: token
+       * }
+       */
+      try {
+        const userId = await pool.query("UPDATE users SET latest_socket_id = $1 WHERE user_id = $2 RETURNING *", [socket.id, jwt.decode(data.token).user])
+        const sockets = await pool.query(`SELECT latest_socket_id FROM users WHERE user_id IN (
+        SELECT user_id FROM conversation_users WHERE conversation_id IN (
+          SELECT conversation_id FROM conversation_users WHERE user_id = $1
+        )
+      )`, [userId.rows[0].user_id])
+        sockets.rows.map(val => io.to(val.latest_socket_id).emit('users:update'))
       } catch (error) {
         console.log(error)
       }

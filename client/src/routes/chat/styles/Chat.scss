@@ -62,6 +62,24 @@ header {
   transition: left 0.3s ease-out;
 }
 
+.is_online {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  float: right;
+  margin-top: 5px;
+  margin-right: 10px;
+  // position: relative;
+}
+
+.green {
+  background-color: green;
+}
+
+.gray {
+  background-color: gray;
+}
+
 .hide {
   left    : -225px;
   // right: 100%;

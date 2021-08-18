@@ -14,6 +14,9 @@ export default function Chat({ setAuth }) {
 
   useEffect(() => {
     socket.connect()
+    if (localStorage.token) {
+      socket.emit('user:online', {token:localStorage.token})
+    }
     return () => socket.close()
   }, [])
 
