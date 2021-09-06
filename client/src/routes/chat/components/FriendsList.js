@@ -3,7 +3,7 @@ import { Link, useRouteMatch } from 'react-router-dom'
 import { socket } from '../../../service/socket'
 import { nanoid } from 'nanoid'
 
-export const FriendsList = ({ setToggle }) => {
+export const FriendsList = ({ setToggleDropDown }) => {
   const [friends, setFriends] = useState([])
   const { url } = useRouteMatch()
 
@@ -29,7 +29,7 @@ export const FriendsList = ({ setToggle }) => {
       <ul className="users_list">
         {friends.length > 0
           ? friends.map((val) => <li key={nanoid()}>
-            <Link className="user_item" onClick={() => setToggle(false)} to={url + "/" + val.user_name}>
+            <Link className="user_item" onClick={() => setToggleDropDown(false)} to={url + "/" + val.user_name}>
               {val.user_name}
             <div className={`is_online ${val.is_online ? 'green' : 'gray'}`} />
             </Link>

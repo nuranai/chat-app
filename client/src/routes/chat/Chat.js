@@ -53,7 +53,7 @@ export default function Chat({ setAuth }) {
 
       <Switch>
         <Route path={`${path}/search`} component={SearchModal} />
-        <Route path={`${path}/:id`} component={Messages} />
+        <Route path={`${path}/:id`} render={()=> <><Messages/></>} />
       </Switch>
     </>)
 }

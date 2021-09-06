@@ -13,7 +13,7 @@ export const Messages = () => {
 
   const elemToScroll = useRef(null)
 
-  const { id } = useParams()
+  let { id } = useParams()
 
   useEffect(() => {
     socket.emit("messages:list", { user: token, friend: id })
@@ -27,15 +27,17 @@ export const Messages = () => {
   }, [token, id])
 
   useEffect(() => {
+    console.log('mounted')
     socket.on('message:get', async (data) => {
       if (data.message.sender_name === id || data.socket_id === socket.id) {
+        console.log(data.message.sender_name, id, data.socket_id, socket.id)
         setMessageList(messageList => [...messageList, data.message])
         if (elemToScroll.current)
           elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
       }
       // await audio.play()
     })
-    return () => setMessageList([])
+    return () => console.log('unmounted')
   }, [])
 
   useEffect(() => {
