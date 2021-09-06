@@ -6,6 +6,8 @@ import { socket } from '../../../service/socket'
 export const Messages = () => {
   const token = localStorage.token
 
+  // const audio = new Audio('../me-too-603.wav')
+
   const [value, setValue] = useState("")
   const [messageList, setMessageList] = useState([])
 
@@ -25,17 +27,18 @@ export const Messages = () => {
   }, [token, id])
 
   useEffect(() => {
-    socket.on('message:get', (data) => {
+    socket.on('message:get', async (data) => {
       if (data.message.sender_name === id || data.socket_id === socket.id) {
         setMessageList(messageList => [...messageList, data.message])
         if (elemToScroll.current)
           elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
       }
+      // await audio.play()
     })
     return () => setMessageList([])
   }, [])
 
-  useEffect(() => { 
+  useEffect(() => {
     if (!elemToScroll) {
       return
     }
@@ -54,8 +57,9 @@ export const Messages = () => {
           ? messageList.map((val, index) => <li
             key={index}
             className={`message-block ${val.sender_name === id
-              ? null
-              : "my"}`}
+                ? null
+                : "my"
+              }`}
           >{val.message_content}</li>)
           : <span className="message_filler">No Messages Yet</span>}
       </ul>

@@ -9,7 +9,7 @@ import { socket } from '../../service/socket'
 export default function Chat({ setAuth }) {
 
   const { path } = useRouteMatch()
-  const [toggle, setToggle] = useState(false)
+  const [toggleDorpDown, setToggleDropDown] = useState(false)
   const [width, setWidth] = useState(window.innerWidth)
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Chat({ setAuth }) {
   }
 
   function Toggle() {
-    setToggle(!toggle)
+    setToggleDropDown(!toggleDorpDown)
   }
 
   return (
@@ -47,8 +47,8 @@ export default function Chat({ setAuth }) {
         {width <= 760 && <button className="ham_btn" onClick={Toggle}>Ham</button>}
       </header>
 
-      <nav className={`friends ${width <=760 && (toggle ? "show" : "hide")}`}>
-        <FriendsList setToggle={setToggle}/>
+      <nav className={`friends ${width <=760 && (toggleDorpDown ? "show" : "hide")}`}>
+        <FriendsList setToggleDropDown={setToggleDropDown}/>
       </nav>
 
       <Switch>

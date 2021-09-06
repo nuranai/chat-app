@@ -7,8 +7,6 @@ export const FriendsList = ({ setToggle }) => {
   const [friends, setFriends] = useState([])
   const { url } = useRouteMatch()
 
-
-
   useEffect(() => {
     socket.on('users:update', () => {
       socket.emit('users:list', { token: localStorage.token })
