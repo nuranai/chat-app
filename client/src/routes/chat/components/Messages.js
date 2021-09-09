@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
 import { socket } from '../../../service/socket'
 
 
-export const Messages = () => {
+export function Messages() {
   const token = localStorage.token
 
   // const audio = new Audio('../me-too-603.wav')
@@ -13,31 +13,28 @@ export const Messages = () => {
 
   const elemToScroll = useRef(null)
 
-  let { id } = useParams()
+  const { id } = useParams()
 
   useEffect(() => {
     socket.emit("messages:list", { user: token, friend: id })
 
-    socket.on("messages:list", (data) => {
-      setMessageList(data)
-      if (elemToScroll.current)
-        elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
+    socket.off('message:get')
+    socket.on('message:get', (data) => {
+      if (data.message.sender_name === id || data.socket_id === socket.id) {
+        setMessageList(messageList => [...messageList, data.message])
+        if (elemToScroll.current)
+          elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
+      }
     })
 
   }, [token, id])
 
   useEffect(() => {
-    console.log('mounted')
-    socket.on('message:get', async (data) => {
-      if (data.message.sender_name === id || data.socket_id === socket.id) {
-        console.log(data.message.sender_name, id, data.socket_id, socket.id)
-        setMessageList(messageList => [...messageList, data.message])
-        if (elemToScroll.current)
-          elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
-      }
-      // await audio.play()
+    socket.on("messages:list", (data) => {
+      setMessageList(data)
+      if (elemToScroll.current)
+        elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
     })
-    return () => console.log('unmounted')
   }, [])
 
   useEffect(() => {
@@ -59,8 +56,8 @@ export const Messages = () => {
           ? messageList.map((val, index) => <li
             key={index}
             className={`message-block ${val.sender_name === id
-                ? null
-                : "my"
+              ? null
+              : "my"
               }`}
           >{val.message_content}</li>)
           : <span className="message_filler">No Messages Yet</span>}

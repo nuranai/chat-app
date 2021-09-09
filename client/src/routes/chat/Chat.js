@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Switch, Route, useRouteMatch } from 'react-router'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { FriendsList } from './components/FriendsList'
 import { SearchModal } from './components/SearchModal'
 import { Messages } from './components/Messages'
@@ -44,7 +44,7 @@ export default function Chat({ setAuth }) {
     <>
       <header>
         <button onClick={LogOut}>log out</button>
-        {width <= 760 && <button className="ham_btn" onClick={Toggle}>Ham</button>}
+        {width <= 760 && <button className="ham_btn" onClick={Toggle}>Menu</button>}
       </header>
 
       <nav className={`friends ${width <=760 && (toggleDorpDown ? "show" : "hide")}`}>
@@ -53,7 +53,7 @@ export default function Chat({ setAuth }) {
 
       <Switch>
         <Route path={`${path}/search`} component={SearchModal} />
-        <Route path={`${path}/:id`} render={()=> <><Messages/></>} />
+        <Route path={`${path}/:id`} component={Messages}/>
       </Switch>
     </>)
 }

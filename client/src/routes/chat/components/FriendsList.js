@@ -15,9 +15,6 @@ export const FriendsList = ({ setToggleDropDown }) => {
         setFriends(data)
         socket.emit('users:join-room', { token: localStorage.token })
       })
-    // .on('users:new-join', () => {
-
-    // })
     socket.emit('users:list', { token: localStorage.token })
     return () => { setFriends([]); }
   }, [])
@@ -25,7 +22,7 @@ export const FriendsList = ({ setToggleDropDown }) => {
 
   return (
     <>
-      <Link to={`${url}/search`} className="find_users">Find Users</Link>
+      <Link to={`/chat/search`} className="find_users">Find Users</Link>
       <ul className="users_list">
         {friends.length > 0
           ? friends.map((val) => <li key={nanoid()}>
