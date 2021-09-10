@@ -44,6 +44,7 @@ module.exports = (io, socket) => {
       }
     })
     .on("users:join-room", async (data) => {
+      // emites when user connects to get needed emites
       /**
        * data structure : 
        * {
@@ -66,6 +67,7 @@ module.exports = (io, socket) => {
       }
     })
     .on("users:add-new", async (data) => {
+      // emits when user found his friend to start new conversation
       /**
        * data strcture:
        * {
@@ -111,6 +113,7 @@ module.exports = (io, socket) => {
       }
     })
     .on('user:online', async (data) => {
+      // on connect set his status to online
       /**
        * data stucture 
        * {

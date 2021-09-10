@@ -6,24 +6,22 @@ import { socket } from '../../../service/socket'
 export function Messages() {
   const token = localStorage.token
 
-  // const audio = new Audio('../me-too-603.wav')
-
-  const [value, setValue] = useState("")
+  const [valueInput, setValueInput] = useState("")
   const [messageList, setMessageList] = useState([])
 
-  const elemToScroll = useRef(null)
+  const listToScroll = useRef(null)
 
   const { id } = useParams()
 
   useEffect(() => {
     socket.emit("messages:list", { user: token, friend: id })
-
+    //on user chat change removes previous listener and adds new one to update friends id
     socket.off('message:get')
     socket.on('message:get', (data) => {
       if (data.message.sender_name === id || data.socket_id === socket.id) {
         setMessageList(messageList => [...messageList, data.message])
-        if (elemToScroll.current)
-          elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
+        if (listToScroll.current)
+          listToScroll.current.scrollTo(0, listToScroll.current.scrollHeight)
       }
     })
 
@@ -32,26 +30,26 @@ export function Messages() {
   useEffect(() => {
     socket.on("messages:list", (data) => {
       setMessageList(data)
-      if (elemToScroll.current)
-        elemToScroll.current.scrollTo(0, elemToScroll.current.scrollHeight)
+      if (listToScroll.current)
+        listToScroll.current.scrollTo(0, listToScroll.current.scrollHeight)
     })
   }, [])
 
   useEffect(() => {
-    if (!elemToScroll) {
+    if (!listToScroll) {
       return
     }
-  }, [elemToScroll])
+  }, [listToScroll])
 
   function SendMessage() {
-    if (value !== '')
-      socket.emit('message:post', { text: value, from: token, to: id })
-    setValue('')
+    if (valueInput !== '')
+      socket.emit('message:post', { text: valueInput, from: token, to: id })
+    setValueInput('')
   }
 
   return (
     <div className="messages">
-      <ul ref={elemToScroll}>
+      <ul ref={listToScroll}>
         {messageList.length > 0
           ? messageList.map((val, index) => <li
             key={index}
@@ -63,10 +61,11 @@ export function Messages() {
           : <span className="message_filler">No Messages Yet</span>}
       </ul>
       <div className="send_message">
-        <input value={value}
+        <input 
+          value={valueInput}
           placeholder="Write Message"
           type="text"
-          onChange={e => setValue(e.target.value)}
+          onChange={e => setValueInput(e.target.value)}
           onKeyPress={e => { if (e.key === 'Enter') SendMessage() }}
         />
         <button onClick={SendMessage}>{'=>'}</button>

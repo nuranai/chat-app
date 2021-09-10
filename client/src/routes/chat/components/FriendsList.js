@@ -24,14 +24,18 @@ export const FriendsList = ({ setToggleDropDown }) => {
     <>
       <Link to={`/chat/search`} className="find_users">Find Users</Link>
       <ul className="users_list">
-        {friends.length > 0
-          ? friends.map((val) => <li key={nanoid()}>
-            <Link className="user_item" onClick={() => setToggleDropDown(false)} to={url + "/" + val.user_name}>
-              {val.user_name}
-            <div className={`is_online ${val.is_online ? 'green' : 'gray'}`} />
-            </Link>
-          </li>)
-          : <span className="no_users">No Users</span>}
+        {
+          friends.length > 0
+            ? friends.map((val) =>
+              <li key={nanoid()}>
+                <Link className="user_item" onClick={() => setToggleDropDown(false)} to={url + "/" + val.user_name}>
+                  {val.user_name}
+                  <div className={`is_online ${val.is_online ? 'green' : 'gray'}`} />
+                </Link>
+              </li>
+            )
+            : <span className="no_users">No Users</span>
+        }
       </ul>
     </>
   )

@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 5000
 app.use(cors())
 app.use(exp.json())
 
+// on production mode use build content
 if (process.env.NODE_ENV === "production") {
   app.use(exp.static(path.join(__dirname, 'client/build')))
 }
@@ -23,6 +24,7 @@ io.on('connection', (socket) => {
   registerUsersHandlers(io, socket)
   socket.on('disconnecting', async (reason) => {
     try {
+      //on disconnect delete socket id to turn users status to offline
       const userId = await pool.query(
         "UPDATE users SET latest_socket_id = NULL WHERE latest_socket_id = $1 RETURNING *",
         [socket.id]
